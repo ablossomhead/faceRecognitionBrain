@@ -8,7 +8,7 @@ const FaceRecognition = ({ imageUrl, box }) => {
                 <img  
                     id='inputimage' 
                     alt='hi' 
-                    src={imageUrl || 'https://news.ucdenver.edu/wp-content/uploads/2020/07/yoga-woman-final-1288x726.png'} 
+                    src={imageUrl} 
                     width='500px' 
                     height='auto'
                 />
