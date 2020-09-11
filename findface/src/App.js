@@ -7,12 +7,8 @@ import Register from './components/Register/Register';
 import Signin from './components/Signin/Signin';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
-import './App.css';
 
-const app = new Clarifai.App({
-  apiKey: '28fbea51ce7b4b168ef8ba07dbee218c'
- });
+import './App.css';
 
 const particlesOptions = {
     particles: {
@@ -58,24 +54,26 @@ const particlesOptions = {
   retina_detect: true
 }
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+    id:'',
+    name:'',
+    email:'',
+    entries: 0,
+    joined: ''
+}
+}
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-        id:'',
-        name:'',
-        email:'',
-        entries: 0,
-        joined: ''
-      }
+    this.state = initialState;
     }
-}
+
 
 loadUser = (data) => {
   this.setState({user: {
@@ -101,7 +99,6 @@ calculateFaceLocation = (data) => {
 }
 
 displayFacebox = (box) => {
-console.log(box)
 this.setState({box})
 }
 
@@ -110,10 +107,14 @@ this.setState({input: event.target.value});
 }
 onSubmit = () => {
 this.setState({imageUrl: this.state.input })
-app.models
-  .predict( 
-    Clarifai.FACE_DETECT_MODEL,
-    this.state.input)
+  fetch('http://localhost:3001/imageUrl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+      })
+    })
+    .then(response => response.json())
   .then(response => {
     if (response) {
       fetch('http://localhost:3001/image', {
@@ -127,6 +128,7 @@ app.models
     .then(count => {
       this.setState(Object.assign(this.state.user, {entries: count}))
     })
+    .catch(err => console.log(err))
   }
     this.displayFacebox(this.calculateFaceLocation(response))
   })
@@ -135,7 +137,7 @@ app.models
 
 onRouteChange = (route) => {
   if (route === 'signout') {
-    this.setState({isSignedIn: false})
+    this.setState(initialState)
   } else if (route === 'home') {
     this.setState({isSignedIn: true})
   }
