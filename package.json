@@ -1,6 +1,5 @@
 {
-  "name": "findface",
-  "homepage": "https://ablossomhead.github.io/faceRecognitionBrain",
+  "name": "findfacebrain",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
