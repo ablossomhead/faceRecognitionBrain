@@ -23,7 +23,7 @@ class Register extends React.Component {
     event.preventDefault();
     const { email, password, name } = this.state;
     console.log(this.state);
-    fetch('http://localhost:3001/register', {
+    fetch('https://findfaceapp.herokuapp.com/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
